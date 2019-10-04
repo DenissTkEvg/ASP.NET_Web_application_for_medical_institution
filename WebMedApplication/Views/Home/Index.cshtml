@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@*Главная страница*@
+<div class="medtb" style="margin-top:2%">
+    <table id="example" class="display" style="width:100%; ">
+        <thead>
+            <tr>
+                <th>Торговое наименование</th>
+                <th>Действующее вещество</th>
+                <th>Дата занесения препарата в базу данных</th>
+                <th>График остатков</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in ViewBag.Preparates)
+            {
+                <tr>
+                    <td><p>@p.TRADE_NAME</p></td>
+                    <td><p>@p.ACTIVE_SUBSTANCE</p></td>
+                    <td><p>@p.DAT</p></td>
+                    <td>
+                        <form action="/Home/DrawChart/@p.ID">
+                            <button type="submit">Построить график</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr style="text-align:center">
+                <th>Торговое наименование</th>
+                <th>Действующее вещество</th>
+                <th>Дата занесения препарата в базу данных</th>
+                <th>График остатков</th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+<style>
+    table.display tbody tr:nth-child(even):hover td {
+        background-color: chartreuse !important;
+    }
+
+    table.display tbody tr:nth-child(odd):hover td {
+        background-color: chartreuse !important;
+    }
+</style>
+<link href="~/Content/style.css" rel="stylesheet" />
+@*<link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/themes/sunny/jquery-ui.css">*@
+<link href="~/Content/jquery-ui.css" rel="stylesheet" />
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    @*<script src="~/Scripts/DataTables/media/js/dataTables.jqueryui.min.js"></script>
+        <script src="~/Scripts/DataTables/media/js/dataTables.jqueryui.js"></script>*@
+    <script src="~/Scripts/script.js"></script>
+    @*Скрипт кнопки "Построить график"*@
+    <script>
+        $(document).ready(function () {
+            $('#example').DataTable();
+        });
+    </script>
+    <script>
+        $('button').button({
+            icons: {
+                primary: 'ui-icon-pencil'
+            },
+            text: false
+        });
+    </script>
+}

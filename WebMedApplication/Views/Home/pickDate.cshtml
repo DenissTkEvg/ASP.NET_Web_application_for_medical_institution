@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "DrawChartDate";
+}
+
+@*Построение графика за заданный период*@
+
+<h3>@ViewBag.Header</h3>
+<div id="chart_container">
+    <canvas id="myChart"></canvas>
+</div>
+<script>
+    var Texts =@Html.Raw(Json.Encode(ViewBag.Texts));
+    var PrepCounts=@Html.Raw(Json.Encode(ViewBag.Counts));
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Texts,
+            datasets: [{
+                label: 'Количество на складе, шт.',
+                data: PrepCounts,
+                lineTension: 0.3,
+                fill: false,
+                borderColor: 'red',
+                backgroundColor: 'transparent',
+                pointBorderColor: 'red',
+                pointBackgroundColor: 'lightgreen',
+                pointRadius: 5,
+                pointHoverRadius: 15,
+                pointHitRadius: 30,
+                pointBorderWidth: 2,
+                pointStyle: 'rect'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>

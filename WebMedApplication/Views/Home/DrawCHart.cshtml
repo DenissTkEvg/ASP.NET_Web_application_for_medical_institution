@@ -1,0 +1,78 @@
+﻿@model WebMedApplication.Models.ValidationDateControl
+@{
+    ViewBag.Title = "DrawCHart";
+}
+@*Представление, в котором происходит построение графиков*@
+<link href="~/Content/style.css" rel="stylesheet" />
+@*<link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/themes/sunny/jquery-ui.css">*@
+<link href="~/Content/jquery-ui.css" rel="stylesheet" />
+<h3>@ViewBag.Name</h3>
+<div id="chart_container">
+    <canvas id="myChart"></canvas>
+</div>
+@using (Html.BeginForm("pickDate", "Home", FormMethod.Post))
+{
+
+    @Html.AntiForgeryToken()
+    <div style="margin-left: 5%;
+            width: 1000px;
+            /*border: 1px solid #ddd;*/
+            padding: 1px;
+            border-radius: 4px;
+     display:inline-block">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <p style="float:left; margin-top:3%; margin-left:12%"> C:  </p>
+        @*@Html.LabelFor(model => model.DOB, htmlAttributes: new { @class = "control-label col-md-2", style = "float:left; margin-top:2%" })*@
+        @Html.EditorFor(model => model.DOB, new { htmlAttributes = new { @class = "form-control", style = "float:left; margin-left:1%;margin-top:2%" } })
+        <p style="float:left;margin-top:3%; margin-left:3%"> по:</p>
+        @*@Html.LabelFor(model => model.DOB2, htmlAttributes: new { @class = "control-label col-md-2", style = "float:left;margin-top:2%; margin-left:3%" })*@
+        @Html.EditorFor(model => model.DOB2, new { htmlAttributes = new { @class = "form-control", style = "float:left;margin-left:1%; margin-top:2%" } })
+        @Html.ValidationMessageFor(model => model.DOB, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(model => model.DOB2, "", new { @class = "text-danger" })
+        <input type="hidden" value="@ViewBag.Id" name="PrepID" />
+        <input type="submit" value="Построить график" style="float:left; margin-top:2.5%; margin-left:3%" />
+    </div>
+}
+
+@*Построение графика*@
+@section scripts{
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/script.js"></script>
+    <script>$("input:submit").button();</script>
+}
+<script>
+    var Texts =@Html.Raw(Json.Encode(ViewBag.Texts));
+    var PrepCounts=@Html.Raw(Json.Encode(ViewBag.Counts));
+    var ctx = document.getElementById("myChart");
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Texts,
+            datasets: [{
+                label: 'Количество на складе, шт.',
+                data: PrepCounts,
+                lineTension: 0.3,
+                fill: false,
+                borderColor: 'red',
+                backgroundColor: 'transparent',
+                pointBorderColor: 'red',
+                pointBackgroundColor: 'lightgreen',
+                pointRadius: 5,
+                pointHoverRadius: 15,
+                pointHitRadius: 30,
+                pointBorderWidth: 2,
+                pointStyle: 'rect'
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
